@@ -6,21 +6,21 @@ import (
 	"runtime/debug"
 )
 
+const UnixExitCodeOK = 0
+
 const UnixExitCodeGeneralError = 1
 
-func PrintErr(err error) bool {
+func ExitOnError(err error) {
 	if err != nil {
 		fmt.Printf("Something went wrong: %s\n", err)
-		if os.Getenv("OSEXIT_DEBUG") == "on" {
+		if os.Getenv("OSEXIT_DEBUG") == "true" {
 			debug.PrintStack()
 		}
-		return true
-	}
-	return false
-}
-
-func ExitOnError(err error) {
-	if PrintErr(err) {
 		os.Exit(UnixExitCodeGeneralError)
 	}
+}
+
+func ExitBecauseError(errorMessage string) {
+	fmt.Println(errorMessage)
+	os.Exit(UnixExitCodeGeneralError)
 }
